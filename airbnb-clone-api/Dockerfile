@@ -1,0 +1,18 @@
+FROM node:latest
+
+LABEL maintainer="Wali Queiroz Santos <wsantos077@gmail.com>"
+
+# DEFINE DIRETORIO DE TRABALHO DENTRO DO CONTAINER
+WORKDIR /home/node/app
+
+# COPIA OS ARQUIVOS PACKAGE.JSON E PACKAGE-LOCK.JSON PARA O DIRETORIO DE TRABALHO
+COPY package*.json ./
+
+RUN npm install
+
+# COPIA O RESTANTE DA PASTA PARA DENTRO DO DIRETORIO DE TRABALHO
+COPY . .
+
+EXPOSE 3333
+
+CMD [ "npm", "start" ]

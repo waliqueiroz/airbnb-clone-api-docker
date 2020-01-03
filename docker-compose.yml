@@ -1,0 +1,41 @@
+version: "3.4"
+services:
+    airbnb-api:
+        image: airbnb-api
+        restart: always
+        container_name: airbnb-api
+        build:
+          context: ./${APPLICATION}
+          dockerfile: Dockerfile
+        environment:
+          TZ: America/Sao_Paulo
+        ports:
+          - "${API_PORT}:3333"
+        volumes:
+          - ./${APPLICATION}:/home/node/app
+        networks:
+          - airbnb-network
+        depends_on:
+          - database
+    database:
+        image: postgres:latest
+        container_name: airbnb-db
+        restart: always
+        ports:
+            - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+        volumes:
+            - postgres_data:${POSTGRES_DATA_DIR}
+        environment:
+            TZ: America/Sao_Paulo
+            PORT: ${POSTGRES_PORT}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DATABASE}
+        networks:
+            - airbnb-network
+networks:
+    airbnb-network:
+        driver: bridge
+volumes:
+    postgres_data:
+        driver: local
